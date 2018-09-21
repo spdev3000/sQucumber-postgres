@@ -4,6 +4,8 @@ module MatcherHelpers
       actual.match(/#{Regexp.quote(Date.today.to_s)}/)
     elsif expected.eql?('yesterday')
       actual.match(/#{Regexp.quote((Date.today - 1).to_s)}/)
+    elsif expected.eql?('lastday_of_lastmonth')
+      actual.match(/#{Regexp.quote((Date.new(Date.today.prev_month.year, Date.today.prev_month.month, -1)).to_s)}/)  
     elsif expected.eql?('any_date')
       actual.match(/^\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2}$/)
     elsif expected.eql?('any_string')
@@ -28,6 +30,8 @@ module MatcherHelpers
             Date.today.to_s
           when /yesterday/
             Date.today.prev_day.to_s
+          when /lastday_of_lastmonth/
+            Date.new(Date.today.prev_month.year, Date.today.prev_month.month, -1).to_s
           when /\s*\d+\s+month(s)?\s+ago\s*/
             number_of_months = value.match(/\d+/)[0].to_i
             timetravel(Date.today, number_of_months, :prev_month).to_s
